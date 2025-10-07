@@ -147,6 +147,10 @@ class LoginScreen extends StatelessWidget{
                           final userCredential = await signInWithGoogle();
                           if(userCredential != null){
                             print("Signed in :${userCredential.user?.displayName}");
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeScreen())
+                            );
                           }
                           else{
                             print("Sign in failed or cancelled");

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shopping_app/google_sign_in.dart';
+import 'package:shopping_app/screens/login_screen.dart';
+import 'package:shopping_app/cart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatelessWidget{
   const ProfileScreen({super.key});
   
   @override
   Widget build(BuildContext context){
+    final user = FirebaseAuth.instance.currentUser;
+
+    final photo = user?.photoURL;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -20,24 +28,27 @@ class ProfileScreen extends StatelessWidget{
           children: [
 
             //Image
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage('https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg'),
-            ),
+
+            if(photo != null)
+              CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(photo),
+              ),
+
 
           const SizedBox(height: 20),
 
           //Name
-          const Text(
-            'Taran Singh',
+           Text(
+            user?.displayName ?? "No name" ,
             style: TextStyle(
               fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
 
            //Email
-            const Text(
-              '123@gmail.com',
+            Text(
+              user?.email ?? "No email" ,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
 
@@ -48,7 +59,16 @@ class ProfileScreen extends StatelessWidget{
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async{
+                  final prefs =await SharedPreferences.getInstance();
+                  await prefs.remove('cart_items');
+                 // setState(() => quantities.clear());
+
                   final userCredential = await signOutGoogle();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                        (route) => false
+                  );
                 },
                 icon: const Icon(Icons.logout),
                 label: const Text('Logout', style: TextStyle(color: Colors.white),),

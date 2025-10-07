@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shopping_app/screens/product_details.dart';
 import 'package:shopping_app/screens/profile_screen.dart';
+import 'package:shopping_app/cart.dart';
 class HomeScreen extends StatelessWidget{
   const HomeScreen({super.key});
 
@@ -20,7 +21,10 @@ class HomeScreen extends StatelessWidget{
             //shoppingCart
             IconButton(
               onPressed: (){
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Cart())
+                );
               },
               icon: const Icon(Icons.shopping_cart, color: Colors.white, size: 30, ),
             ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
@@ -18,9 +19,12 @@ class myApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool loggedIn = FirebaseAuth.instance.currentUser != null;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: loggedIn ? HomeScreen() : LoginScreen(),
     );
   }
 }

@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shopping_app/products.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetails extends StatelessWidget{
   final Product product;
 
   const ProductDetails({super.key, required this.product});
+
+  Future<void> addtoCart(Product product, BuildContext context) async{
+    final prefs =await SharedPreferences.getInstance();
+    final data = prefs.getString('cart_items');
+    List<dynamic> cart = data != null ? jsonDecode(data): [];
+
+    bool found =false;
+    for(var item in cart){
+      if(item['product']['id'] == product.id){
+        item['quantity'] +=1;
+        found =true;
+        break;
+      }
+    }
+    if(!found){
+      cart.add({'product': product.toJson(), 'quantity': 1});
+    }
+    await prefs.setString('cart_items', jsonEncode(cart));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +107,7 @@ class ProductDetails extends StatelessWidget{
                 ),
 
                 onPressed: (){
+                  addtoCart(product, context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: RichText(
