@@ -70,7 +70,7 @@ class ProfileScreen extends StatelessWidget{
                         (route) => false
                   );
                 },
-                icon: const Icon(Icons.logout),
+                icon: const Icon(Icons.logout, color: Colors.white),
                 label: const Text('Logout', style: TextStyle(color: Colors.white),),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurple,
